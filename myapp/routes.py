@@ -15,27 +15,31 @@ def get_users(email):
 
 @main.route('/adduser/', methods=['POST'])
 def add_user():
-        data = request.get_json()
+    data = request.get_json()
 
-        if 'username' not in data:
-            return jsonify({'error': 'Missing username parameter'}), 400
+    # Check for the required parameters
+    required_params = ['firstname', 'lastname', 'phone', 'email']
+    missing_params = [param for param in required_params if param not in data]
 
-        # Extract additional user information from the request
-        id = data.get('id', '')
-        firstname = data.get('firstname', '')
-        lastname = data.get('lastname', '')
-        phone = data.get('phone', '')
-        email = data.get('email', '')
+    if missing_params:
+        return jsonify({'error': f'Missing parameters: {", ".join(missing_params)}'}), 400
 
-        # Create a new user with the provided information
-        new_user = User(
-            id=id,
-            firstname=firstname,
-            lastname=lastname,
-            phone=phone,
-            email=email
-        )
+    # Extract user information from the request
+    firstname = data['firstname']
+    lastname = data['lastname']
+    phone = data['phone']
+    email = data['email']
 
-        # Add the new user to the database
-        db.session.add(new_user)
-        db.session.commit()
+    # Create a new user with the provided information
+    new_user = User(
+        firstname=firstname,
+        lastname=lastname,
+        phone=phone,
+        email=email
+    )
+
+    # Add the new user to the database
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({'message': 'User added successfully'}), 200
