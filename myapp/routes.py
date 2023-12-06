@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for
+from flask import Blueprint, redirect, url_for,jsonify
 
 from .extensions import db
 from .models import User
@@ -8,8 +8,10 @@ main = Blueprint('main', __name__)
 @main.route('/')
 def index():
     users = User.query.all()
-    users_list_html = [f"<li>{ user.username }</li>" for user in users]
-    return users
+    users_list = [{'id': user.id, 'username': user.username} for user in users]
+
+    # Return the users as JSON
+    return jsonify(users=users_list)
 
 @main.route('/add/<username>')
 def add_user(username):
