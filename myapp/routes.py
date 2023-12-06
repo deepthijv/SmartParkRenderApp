@@ -7,9 +7,12 @@ main = Blueprint('main', __name__)
 @main.route('/users', methods=['GET'])
 def get_users():
     users = User.query.all()
-    users_list = [{'id': user.id, 'username': user.username} for user in users]
 
-    return jsonify(users=users_list)
+    if users:
+        # Return the first user directly
+        user = users[0]
+        user_dict = {'id': user.id, 'username': user.username}
+        return jsonify(user_dict)
 
 @main.route('/', methods=['POST'])
 def add_user():
