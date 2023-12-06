@@ -21,6 +21,7 @@ def add_user():
             return jsonify({'error': 'Missing username parameter'}), 400
 
         # Extract additional user information from the request
+        id = data.get('id', '')
         firstname = data.get('firstname', '')
         lastname = data.get('lastname', '')
         phone = data.get('phone', '')
@@ -28,7 +29,7 @@ def add_user():
 
         # Create a new user with the provided information
         new_user = User(
-            username=data['username'],
+            id=id,
             firstname=firstname,
             lastname=lastname,
             phone=phone,
